@@ -44,7 +44,8 @@ import tachiyomi.i18n.MR
 import tachiyomi.presentation.core.components.BadgeGroup
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.selectedBackground
-import tachiyomi.domain.entries.EntryCover as EntryCoverModel
+import tachiyomi.domain.entries.manga.model.MangaCover as DomainMangaCover
+
 
 object CommonEntryItemDefaults {
     val GridHorizontalSpacer = 4.dp
@@ -71,7 +72,7 @@ private const val GRID_SELECTED_COVER_ALPHA = 0.76f
  */
 @Composable
 fun EntryCompactGridItem(
-    coverData: EntryCoverModel,
+    coverData: DomainMangaCover,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     isSelected: Boolean = false,
@@ -80,7 +81,10 @@ fun EntryCompactGridItem(
     coverAlpha: Float = 1f,
     coverBadgeStart: @Composable (RowScope.() -> Unit)? = null,
     coverBadgeEnd: @Composable (RowScope.() -> Unit)? = null,
+    libraryColored: Boolean? = null,
 ) {
+    val bgColor = libraryColored?.let { coverData.dominantCoverColors?.first?.let { Color(it) } }
+    val onBgColor = libraryColored?.let { coverData.dominantCoverColors?.second }
     GridItemSelectable(
         isSelected = isSelected,
         onClick = onClick,
@@ -93,6 +97,8 @@ fun EntryCompactGridItem(
                         .fillMaxWidth()
                         .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                     data = coverData,
+                    bgColor = bgColor,
+                    tint = onBgColor,
                 )
             },
             badgesStart = coverBadgeStart,
@@ -181,17 +187,20 @@ fun EntryComfortableGridItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     titleMaxLines: Int = 2,
-    coverData: EntryCoverModel,
+    coverData: DomainMangaCover,
     coverAlpha: Float = 1f,
     coverBadgeStart: (@Composable RowScope.() -> Unit)? = null,
     coverBadgeEnd: (@Composable RowScope.() -> Unit)? = null,
     onClickContinueViewing: (() -> Unit)? = null,
+    libraryColored: Boolean? = null,
 ) {
     GridItemSelectable(
         isSelected = isSelected,
         onClick = onClick,
         onLongClick = onLongClick,
     ) {
+        val bgColor = libraryColored?.let { coverData.dominantCoverColors?.first?.let { Color(it) } }
+        val onBgColor = libraryColored?.let { coverData.dominantCoverColors?.second }
         Column {
             EntryGridCover(
                 cover = {
@@ -200,6 +209,8 @@ fun EntryComfortableGridItem(
                             .fillMaxWidth()
                             .alpha(if (isSelected) GRID_SELECTED_COVER_ALPHA else coverAlpha),
                         data = coverData,
+                        bgColor = bgColor,
+                        tint = onBgColor,
                     )
                 },
                 badgesStart = coverBadgeStart,
@@ -333,7 +344,7 @@ private fun Modifier.selectedOutline(
 fun EntryListItem(
     isSelected: Boolean = false,
     title: String,
-    coverData: EntryCoverModel,
+    coverData: DomainMangaCover,
     coverAlpha: Float = 1f,
     onLongClick: () -> Unit,
     onClick: () -> Unit,
@@ -341,7 +352,10 @@ fun EntryListItem(
     onClickContinueViewing: (() -> Unit)? = null,
     entries: Int = -1,
     containerHeight: Int = 0,
+    libraryColored: Boolean? = null,
 ) {
+    val bgColor = libraryColored?.let { coverData.dominantCoverColors?.first?.let { Color(it) } }
+    val onBgColor = libraryColored?.let { coverData.dominantCoverColors?.second }
     val density = LocalDensity.current
     Row(
         modifier = Modifier
@@ -371,6 +385,8 @@ fun EntryListItem(
                 .fillMaxHeight()
                 .alpha(coverAlpha),
             data = coverData,
+            bgColor = bgColor,
+            tint = onBgColor,
         )
         Text(
             text = title,

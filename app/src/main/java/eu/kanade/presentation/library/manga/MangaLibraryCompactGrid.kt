@@ -68,6 +68,7 @@ internal fun MangaLibraryCompactGrid(
                 } else {
                     null
                 },
+                libraryColored = true,
             )
         }
     }

@@ -222,4 +222,24 @@
     <string name="eh_boost_page_downloaded">This page has already been downloaded!</string>
     <string name="eh_boost_boosted">Boosted current page!</string>
     <string name="eh_boost_invalid_loader">This page cannot be boosted (invalid page loader)!</string>
+
+    <!-- Preferences cover theme -->
+    <string name="pref_manga_info">Manga Info</string>
+    <string name="pref_theme_cover_based">Theme based on cover</string>
+    <string name="pref_theme_cover_based_style">Cover based theme style</string>
+    <string name="pref_theme_cover_based_style_tonalspot">Tonal Spot</string>
+    <string name="pref_theme_cover_based_style_neutral">Neutral</string>
+    <string name="pref_theme_cover_based_style_vibrant">Vibrant</string>
+    <string name="pref_theme_cover_based_style_expressive">Expressive</string>
+    <string name="pref_theme_cover_based_style_rainbow">Rainbow</string>
+    <string name="pref_theme_cover_based_style_fruitsalad">Fruit Salad</string>
+    <string name="pref_theme_cover_based_style_monochrome">Monochrome</string>
+    <string name="pref_theme_cover_based_style_fidelity">Fidelity</string>
+    <string name="pref_theme_cover_based_style_content">Content</string>
+    <string name="pref_panorama_cover">Panorama Cover</string>
+    <string name="pref_panorama_cover_summary">Show cover in landscape mode if it\'s a wide image</string>
+    <string name="pref_panorama_cover_flow">Panorama Cover Flow</string>
+    <string name="pref_panorama_cover_flow_summary">Show panorama cover in Global Search &amp; Suggestions</string>
+    <string name="action_display_comfortable_grid_panorama">Panorama comfortable grid</string>
+
 </resources>

@@ -76,6 +76,7 @@ internal fun MangaLibraryList(
                 } else {
                     null
                 },
+                libraryColored = true,
                 entries = entries,
                 containerHeight = containerHeight,
             )

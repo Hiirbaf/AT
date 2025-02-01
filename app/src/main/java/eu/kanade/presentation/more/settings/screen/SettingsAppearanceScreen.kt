@@ -6,10 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.materialkolor.PaletteStyle
+import eu.kanade.core.preference.asState
 import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.domain.ui.model.NavStyle
@@ -112,6 +115,33 @@ object SettingsAppearanceScreen : SearchableSettings {
                         (context as? Activity)?.let { ActivityCompat.recreate(it) }
                         true
                     },
+                ),
+            ),
+        )
+    }
+
+    @Composable
+    private fun getDetailsPageThemeGroup(
+        uiPreferences: UiPreferences,
+    ): Preference.PreferenceGroup {
+        val scope = rememberCoroutineScope()
+        val detailsPageThemeCoverBased by remember {
+            Injekt.get<UiPreferences>().themeCoverBased().asState(scope)
+        }
+        return Preference.PreferenceGroup(
+            title = stringResource(TLMR.strings.pref_details_page_theme),
+            preferenceItems = persistentListOf(
+                Preference.PreferenceItem.SwitchPreference(
+                    pref = uiPreferences.themeCoverBased(),
+                    title = stringResource(TLMR.strings.pref_theme_cover_based),
+                ),
+                Preference.PreferenceItem.ListPreference(
+                    pref = uiPreferences.themeCoverBasedStyle(),
+                    title = stringResource(TLMR.strings.pref_theme_cover_based_style),
+                    enabled = detailsPageThemeCoverBased,
+                    entries = PaletteStyle.entries
+                        .associateWith { it.name }
+                        .toImmutableMap(),
                 ),
             ),
         )

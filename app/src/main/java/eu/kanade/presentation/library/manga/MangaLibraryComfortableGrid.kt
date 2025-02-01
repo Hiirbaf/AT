@@ -67,6 +67,7 @@ internal fun MangaLibraryComfortableGrid(
                 } else {
                     null
                 },
+                libraryColored = true,
             )
         }
     }

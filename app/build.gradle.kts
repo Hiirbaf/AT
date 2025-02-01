@@ -293,6 +293,9 @@ dependencies {
     implementation(libs.torrentserver)
     // Cast
     implementation(libs.bundles.cast)
+    //KMK
+    implementation(libs.palette.ktx)
+    implementation(libs.materialKolor)
 }
 
 androidComponents {

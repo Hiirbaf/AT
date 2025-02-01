@@ -70,6 +70,7 @@ import eu.kanade.tachiyomi.ui.entries.manga.ChapterList
 import eu.kanade.tachiyomi.ui.entries.manga.MangaScreenModel
 import eu.kanade.tachiyomi.util.system.copyToClipboard
 import tachiyomi.domain.entries.manga.model.Manga
+import tachiyomi.domain.entries.manga.model.MangaCover
 import tachiyomi.domain.items.chapter.model.Chapter
 import tachiyomi.domain.items.chapter.service.missingChaptersCount
 import tachiyomi.domain.library.service.LibraryPreferences
@@ -136,6 +137,10 @@ fun MangaScreen(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    //kmk
+    onCoverLoaded: (MangaCover) -> Unit,
+    onPaletteScreenClick: () -> Unit,
+    //kmk
 ) {
     val context = LocalContext.current
     val onCopyTagToClipboard: (tag: String) -> Unit = {
@@ -187,6 +192,10 @@ fun MangaScreen(
             onAllChapterSelected = onAllChapterSelected,
             onInvertSelection = onInvertSelection,
             onSettingsClicked = onSettingsClicked,
+            //kmk
+            onCoverLoaded = onCoverLoaded,
+            onPaletteScreenClick = onPaletteScreenClick,
+            //
         )
     } else {
         MangaScreenLargeImpl(
@@ -226,6 +235,10 @@ fun MangaScreen(
             onAllChapterSelected = onAllChapterSelected,
             onInvertSelection = onInvertSelection,
             onSettingsClicked = onSettingsClicked,
+            //kmk
+            onCoverLoaded = onCoverLoaded,
+            onPaletteScreenClick = onPaletteScreenClick,
+            //kmk
         )
     }
 }
@@ -283,6 +296,9 @@ private fun MangaScreenSmallImpl(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    //kmk
+    onCoverLoaded = onCoverLoaded,
+    onPaletteScreenClick = onPaletteScreenClick,
 ) {
     val chapterListState = rememberLazyListState()
 
@@ -342,6 +358,7 @@ private fun MangaScreenSmallImpl(
                 actionModeCounter = selectedChapterCount,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
+                onPaletteScreenClick = onPaletteScreenClick,
                 isManga = true,
             )
         },
@@ -420,6 +437,9 @@ private fun MangaScreenSmallImpl(
                             isStubSource = remember { state.source is StubMangaSource },
                             onCoverClick = onCoverClicked,
                             doSearch = onSearch,
+                            //kmk
+                            onCoverLoaded = onCoverLoaded,
+                            //kmk
                         )
                     }
 
@@ -540,6 +560,10 @@ fun MangaScreenLargeImpl(
     onChapterSelected: (ChapterList.Item, Boolean, Boolean, Boolean) -> Unit,
     onAllChapterSelected: (Boolean) -> Unit,
     onInvertSelection: () -> Unit,
+    //kmk
+    onCoverLoaded: (MangaCover) -> Unit,
+    onPaletteScreenClick: () -> Unit,
+    //kmk
 ) {
     val layoutDirection = LocalLayoutDirection.current
     val density = LocalDensity.current
@@ -592,6 +616,9 @@ fun MangaScreenLargeImpl(
                 actionModeCounter = selectedChapterCount,
                 onSelectAll = { onAllChapterSelected(true) },
                 onInvertSelection = { onInvertSelection() },
+                //kmk
+                onPaletteScreenClick = onPaletteScreenClick,
+                //kmk
                 isManga = true,
             )
         },
@@ -671,6 +698,9 @@ fun MangaScreenLargeImpl(
                             isStubSource = remember { state.source is StubMangaSource },
                             onCoverClick = onCoverClicked,
                             doSearch = onSearch,
+                            //kmk
+                            onCoverLoaded = onCoverLoaded,
+                            //kmk
                         )
                         MangaActionRow(
                             favorite = state.manga.favorite,

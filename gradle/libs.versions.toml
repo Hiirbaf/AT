@@ -101,6 +101,8 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 aniyomi-mpv = "com.github.aniyomiorg:aniyomi-mpv-lib:1.17.n"
 ffmpeg-kit = "com.github.jmir1:ffmpeg-kit:1.17"
 arthenica-smartexceptions = "com.arthenica:smart-exception-java:0.2.1"
+palette-ktx = "androidx.palette:palette-ktx:1.0.0"
+materialKolor = "com.materialkolor:material-kolor:2.0.0"
 
 torrentserver = "com.github.Diegopyl1209:torrentserver-aniyomi:c18f58e51b"
 

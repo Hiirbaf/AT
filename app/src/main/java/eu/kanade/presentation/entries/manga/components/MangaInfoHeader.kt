@@ -77,6 +77,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import eu.kanade.domain.ui.UiPreferences
 import eu.kanade.presentation.components.DropdownMenu
 import eu.kanade.presentation.entries.components.DotSeparatorText
 import eu.kanade.presentation.entries.components.ItemCover
@@ -92,9 +93,12 @@ import tachiyomi.presentation.core.i18n.pluralStringResource
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.util.clickableNoIndication
 import tachiyomi.presentation.core.util.secondaryItemAlpha
+import uy.kohesive.injekt.Injekt
+import uy.kohesive.injekt.api.get
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
+import tachiyomi.domain.entries.manga.model.MangaCover as DomainMangaCover
 
 private val whitespaceLineRegex = Regex("[\\r\\n]{2,}", setOf(RegexOption.MULTILINE))
 
@@ -108,7 +112,10 @@ fun MangaInfoBox(
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
     modifier: Modifier = Modifier,
-) {
+    //KMK
+    onCoverLoaded: (DomainMangaCover) -> Unit,
+    //KMK
+    ) {
     Box(modifier = modifier) {
         // Backdrop
         val backdropGradientColors = listOf(
@@ -127,10 +134,14 @@ fun MangaInfoBox(
                 .drawWithContent {
                     drawContent()
                     drawRect(
-                        brush = Brush.verticalGradient(colors = backdropGradientColors),
+                        brush = Brush.verticalGradient(
+                            colors = backdropGradientColors,
+                            startY = size.height / 2,
+                        ),
                     )
                 }
-                .blur(4.dp)
+                .background(MaterialTheme.colorScheme.surfaceTint.copy(alpha = 0.4f))
+                .blur(7.dp)
                 .alpha(0.2f),
         )
 
@@ -142,6 +153,9 @@ fun MangaInfoBox(
                     manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    //KMK
+                    onCoverLoaded = onCoverLoaded,
+                    //KMK
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
                 )
@@ -151,6 +165,9 @@ fun MangaInfoBox(
                     manga = manga,
                     sourceName = sourceName,
                     isStubSource = isStubSource,
+                    //KMK
+                    onCoverLoaded = onCoverLoaded,
+                    //KMK
                     onCoverClick = onCoverClick,
                     doSearch = doSearch,
                 )
@@ -208,7 +225,13 @@ fun MangaActionRow(
                 )
             },
             icon = Icons.Default.HourglassEmpty,
-            color = if (isUserIntervalMode) MaterialTheme.colorScheme.primary else defaultActionButtonColor,
+            //KMK
+            color = if (isUserIntervalMode || nextUpdateDays?.let { it <= 1 } == true) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                defaultActionButtonColor
+            },
+            //KMK
             onClick = { onEditIntervalClicked?.invoke() },
         )
         MangaActionButton(
@@ -242,6 +265,8 @@ fun ExpandableMangaDescription(
     onCopyTagToClipboard: (tag: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val uiPreferences = Injekt.get<UiPreferences>()
+    val pureDarkMode = uiPreferences.themeDarkAmoled().get()
     Column(modifier = modifier) {
         val (expanded, onExpanded) = rememberSaveable {
             mutableStateOf(defaultExpandState)
@@ -307,6 +332,7 @@ fun ExpandableMangaDescription(
                                     tagSelected = it
                                     showMenu = true
                                 },
+                                pureDarkMode = pureDarkMode,
                             )
                         }
                     }
@@ -323,6 +349,7 @@ fun ExpandableMangaDescription(
                                     tagSelected = it
                                     showMenu = true
                                 },
+                                pureDarkMode = pureDarkMode,
                             )
                         }
                     }
@@ -339,6 +366,9 @@ private fun MangaAndSourceTitlesLarge(
     sourceName: String,
     isStubSource: Boolean,
     onCoverClick: () -> Unit,
+    //KMK
+    onCoverLoaded: (DomainMangaCover) -> Unit,
+    //KMK
     doSearch: (query: String, global: Boolean) -> Unit,
 ) {
     Column(
@@ -355,6 +385,7 @@ private fun MangaAndSourceTitlesLarge(
                 .build(),
             contentDescription = stringResource(MR.strings.manga_cover),
             onClick = onCoverClick,
+            onCoverLoaded = { mangaCover -> onCoverLoaded(mangaCover) },
         )
         Spacer(modifier = Modifier.height(16.dp))
         MangaContentInfo(
@@ -376,6 +407,7 @@ private fun MangaAndSourceTitlesSmall(
     manga: Manga,
     sourceName: String,
     isStubSource: Boolean,
+    onCoverLoaded: (DomainMangaCover) -> Unit,
     onCoverClick: () -> Unit,
     doSearch: (query: String, global: Boolean) -> Unit,
 ) {
@@ -396,6 +428,7 @@ private fun MangaAndSourceTitlesSmall(
                 .build(),
             contentDescription = stringResource(MR.strings.manga_cover),
             onClick = onCoverClick,
+            onCoverLoaded = { mangaCover -> onCoverLoaded(mangaCover) },
         )
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -608,7 +641,7 @@ private fun MangaSummary(
                         contentDescription = stringResource(
                             if (expanded) MR.strings.manga_info_collapse else MR.strings.manga_info_expand,
                         ),
-                        tint = MaterialTheme.colorScheme.onBackground,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.background(Brush.radialGradient(colors = colors.asReversed())),
                     )
                 }

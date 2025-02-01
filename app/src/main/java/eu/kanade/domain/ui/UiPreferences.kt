@@ -1,5 +1,6 @@
 package eu.kanade.domain.ui
 
+import com.materialkolor.PaletteStyle
 import eu.kanade.domain.ui.model.AppTheme
 import eu.kanade.domain.ui.model.NavStyle
 import eu.kanade.domain.ui.model.StartScreen
@@ -29,6 +30,14 @@ class UiPreferences(
     )
 
     fun colorTheme() = preferenceStore.getInt("pref_color_theme", 0)
+
+    // KMK -->
+
+    fun themeCoverBased() = preferenceStore.getBoolean("pref_theme_cover_based_key", true)
+
+    fun themeCoverBasedStyle() = preferenceStore.getEnum("pref_theme_cover_based_style_key", PaletteStyle.Vibrant)
+
+    // KMK <--
 
     fun themeDarkAmoled() = preferenceStore.getBoolean("pref_theme_dark_amoled_key", false)
 
